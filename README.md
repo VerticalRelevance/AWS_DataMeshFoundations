@@ -7,6 +7,7 @@ Accounts are set up (producer, consumer, and central catalog)
 
 Producer account has data in the refined bucket which is shared with the central catalog account glue crawler role through the bucket policy 
 
+
 Central Catalog account crawls the bucket in the producer account to create the catalog tables 
 
 The Central Catalog database and tables are assigned tags 
