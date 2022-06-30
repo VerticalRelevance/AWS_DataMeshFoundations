@@ -14,22 +14,32 @@ class CentralCatalogStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
 
-        #Create IAM role for Glue Crawler, and adding permission for it to access the Producer refined bucket
-        glue_crawler_role = self.create_iam_role_glue(role_name = "producer-bucket-crawler-role")
+        #Create databse
+        database = glue.Database(self, id='my_database_id',
+                                database_name='producer-a-db'
+        )
 
-        glue_crawler_role.add_to_principal_policy(statement = iam.PolicyStatement(actions = ["s3:*"], 
-                                                                                  resources = ["arn:aws:s3:::data-mesh-refined/*",
-                                                                                               "arn:aws:s3:::data-mesh-refined"]))
+        #Creating Schema
+        schema = glue.Table(self, "MyTable",
+                            database= database,
+                            table_name="us_customers-a",
+                            columns=[glue.Column(name="first_name",type=glue.Schema.STRING),
+                                     glue.Column(name="last_name",type=glue.Schema.STRING),
+                                     glue.Column(name="company_name",type=glue.Schema.STRING),
+                                     glue.Column(name="address",type=glue.Schema.STRING),
+                                     glue.Column(name="city",type=glue.Schema.STRING),
+                                     glue.Column(name="county",type=glue.Schema.STRING),
+                                     glue.Column(name="state",type=glue.Schema.STRING),
+                                     glue.Column(name="zip",type=glue.Schema.STRING),
+                                     glue.Column(name="phone1",type=glue.Schema.STRING),
+                                     glue.Column(name="phone2",type=glue.Schema.STRING),
+                                     glue.Column(name="email",type=glue.Schema.STRING),
+                                     glue.Column(name="web",type=glue.Schema.STRING)],
+                            partition_keys=[glue.Column(name="year", type=glue.Schema.SMALL_INT), 
+                                            glue.Column(name="month",type=glue.Schema.SMALL_INT)],
+                            data_format=glue.DataFormat.JSON
+                        )
 
-
-        #Creating Glue Crawler to crawl the bucket in the Producer Account
-        producer_bucket_crawler = self.create_glue_crawler(crawler_name = "producer-crawler", 
-                                                           bucket_path = "s3://data-mesh-refined/", 
-                                                           iam_role = glue_crawler_role,
-                                                           db_name = "producer-data")
-
-        #Dependancies
-        producer_bucket_crawler.node.add_dependency(glue_crawler_role) #creates iam role before crawler
 
 
         #Creating Lambda function to grant tag-based lakeformation permissions
@@ -45,45 +55,3 @@ class CentralCatalogStack(Stack):
         
 
         
-
-    #GENERAL FUNCTIONS FOR RESOURCES
-
-    #Function to create Crawler 
-    def create_glue_crawler(self, crawler_name:str, bucket_path: str, iam_role, db_name: str):
-
-        s3_target = glue.CfnCrawler.TargetsProperty(s3_targets = [glue.CfnCrawler.S3TargetProperty(path = bucket_path)])
-
-        crawler = glue.CfnCrawler(self, crawler_name, 
-                                  role = iam_role.role_arn,
-                                  targets = s3_target,
-                                  database_name = db_name,
-                                  configuration = '{"Version": 1.0,"Grouping": {"TableGroupingPolicy": "CombineCompatibleSchemas"}}'
-        )
-
-        return crawler
-
-
-    #Function to Create IAM role for glue crawler with standard permissions
-    def create_iam_role_glue(self, role_name: str):
-
-        glue_role = iam.Role(self, role_name, 
-                             assumed_by = iam.ServicePrincipal(service = "glue.amazonaws.com"), 
-                             description = "Role for glue to crawl cross account buckets",
-                             role_name = role_name)
-
-
-        glue_role.add_managed_policy(policy = iam.ManagedPolicy.from_managed_policy_arn(self, "Glue Service Role", 
-                                                                                        managed_policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"))
-
-        glue_role.add_managed_policy(policy = iam.ManagedPolicy.from_managed_policy_arn(self, "S3 Access", 
-                                                                                        managed_policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"))
-
-        glue_role.add_managed_policy(policy = iam.ManagedPolicy.from_managed_policy_arn(self, "Lake Formation Access", 
-                                                                                        managed_policy_arn = "arn:aws:iam::aws:policy/AWSLakeFormationDataAdmin"))
-
-        glue_role.add_managed_policy(policy = iam.ManagedPolicy.from_managed_policy_arn(self, "Lake Formation Cross Account", 
-                                                                                        managed_policy_arn = "arn:aws:iam::aws:policy/AWSLakeFormationCrossAccountManager"))
-
-        glue_role.add_managed_policy(policy = iam.ManagedPolicy.from_managed_policy_arn(self, "Glue Console access", 
-                                                                                        managed_policy_arn = "arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess"))
-        return glue_role

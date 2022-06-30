@@ -2,5 +2,6 @@
 
 # Run deployment
 echo "Begin Consumer deployment.."
-cdk deploy --profile "profile_name"
+cdk bootstrap --profile consumer
+cdk deploy --profile consumer
 echo "Consumer deployment complete."
