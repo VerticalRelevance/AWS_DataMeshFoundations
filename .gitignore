@@ -1,0 +1,12 @@
+
+
+# Python
+__pycache__/
+
+# VSCode extension
+.vscode/
+
+# CDK
+cdk.context.json
+.cdk.staging/
+cdk.out/
