@@ -1,0 +1,266 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.0.111"
+        }
+      },
+      "CentralCatalogStack": {
+        "id": "CentralCatalogStack",
+        "path": "CentralCatalogStack",
+        "children": {
+          "producer-database-a": {
+            "id": "producer-database-a",
+            "path": "CentralCatalogStack/producer-database-a",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Glue::Database",
+              "aws:cdk:cloudformation:props": {
+                "catalogId": "480025846069",
+                "databaseInput": {
+                  "name": "producer-database-a"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_glue.CfnDatabase",
+              "version": "2.19.0"
+            }
+          },
+          "us_customers-a": {
+            "id": "us_customers-a",
+            "path": "CentralCatalogStack/us_customers-a",
+            "attributes": {
+              "aws:cdk:cloudformation:type": "AWS::Glue::Table",
+              "aws:cdk:cloudformation:props": {
+                "catalogId": "480025846069",
+                "databaseName": "producer-database-a",
+                "tableInput": {
+                  "description": "description",
+                  "name": "us_customers-a",
+                  "storageDescriptor": {
+                    "columns": [
+                      {
+                        "name": "first_name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "last_name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "company_name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "address",
+                        "type": "string"
+                      },
+                      {
+                        "name": "city",
+                        "type": "string"
+                      },
+                      {
+                        "name": "county",
+                        "type": "string"
+                      },
+                      {
+                        "name": "state",
+                        "type": "string"
+                      },
+                      {
+                        "name": "zip",
+                        "type": "string"
+                      },
+                      {
+                        "name": "phone1",
+                        "type": "string"
+                      },
+                      {
+                        "name": "phone2",
+                        "type": "string"
+                      },
+                      {
+                        "name": "email",
+                        "type": "string"
+                      },
+                      {
+                        "name": "web",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_glue.CfnTable",
+              "version": "2.19.0"
+            }
+          },
+          "lakeformation-grant-tag-based": {
+            "id": "lakeformation-grant-tag-based",
+            "path": "CentralCatalogStack/lakeformation-grant-tag-based",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "CentralCatalogStack/lakeformation-grant-tag-based/ServiceRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "CentralCatalogStack/lakeformation-grant-tag-based/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          },
+                          "arn:aws:iam::aws:policy/AWSLakeFormationDataAdmin"
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.19.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.19.0"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "CentralCatalogStack/lakeformation-grant-tag-based/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "CentralCatalogStack/lakeformation-grant-tag-based/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.19.0"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "CentralCatalogStack/lakeformation-grant-tag-based/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.19.0"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.19.0"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "CentralCatalogStack/lakeformation-grant-tag-based/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+                      },
+                      "s3Key": "eb91f866ba4298c6b3cd4c336e92c342852c9b8cdb5e0c43bb96c02ac7730999.zip"
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "lakeformationgranttagbasedServiceRole24F25D55",
+                        "Arn"
+                      ]
+                    },
+                    "handler": "tag-based-grant.lambda_handler",
+                    "runtime": "python3.8"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.19.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.19.0"
+            }
+          },
+          "LF Lambda Access": {
+            "id": "LF Lambda Access",
+            "path": "CentralCatalogStack/LF Lambda Access",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.19.0"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "CentralCatalogStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "CentralCatalogStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.19.0"
+                }
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "CentralCatalogStack/CDKMetadata/Condition",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnCondition",
+                  "version": "2.19.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.0.111"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.19.0"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.19.0"
+    }
+  }
+}

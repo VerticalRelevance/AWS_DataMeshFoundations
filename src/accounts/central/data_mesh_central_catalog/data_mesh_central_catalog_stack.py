@@ -15,31 +15,36 @@ class CentralCatalogStack(Stack):
 
 
         #Create databse
-        database = glue.Database(self, id='my_database_id',
-                                database_name='producer-a-db'
-        )
+        cfn_database = glue.CfnDatabase(self, "producer-database-a",
+            catalog_id="480025846069",
+            database_input=glue.CfnDatabase.DatabaseInputProperty(
+                name="producer-database-a"
+                )
+            )
+    
 
-        #Creating Schema
-        schema = glue.Table(self, "MyTable",
-                            database= database,
-                            table_name="us_customers-a",
-                            columns=[glue.Column(name="first_name",type=glue.Schema.STRING),
-                                     glue.Column(name="last_name",type=glue.Schema.STRING),
-                                     glue.Column(name="company_name",type=glue.Schema.STRING),
-                                     glue.Column(name="address",type=glue.Schema.STRING),
-                                     glue.Column(name="city",type=glue.Schema.STRING),
-                                     glue.Column(name="county",type=glue.Schema.STRING),
-                                     glue.Column(name="state",type=glue.Schema.STRING),
-                                     glue.Column(name="zip",type=glue.Schema.STRING),
-                                     glue.Column(name="phone1",type=glue.Schema.STRING),
-                                     glue.Column(name="phone2",type=glue.Schema.STRING),
-                                     glue.Column(name="email",type=glue.Schema.STRING),
-                                     glue.Column(name="web",type=glue.Schema.STRING)],
-                            partition_keys=[glue.Column(name="year", type=glue.Schema.SMALL_INT), 
-                                            glue.Column(name="month",type=glue.Schema.SMALL_INT)],
-                            data_format=glue.DataFormat.JSON
-                        )
-
+        #Creating table
+        cfn_table = glue.CfnTable(self, "us_customers-a",
+            catalog_id="480025846069",
+            database_name="producer-database-a",
+            table_input=glue.CfnTable.TableInputProperty(
+                description="description",
+                name="us_customers-a",
+                storage_descriptor=glue.CfnTable.StorageDescriptorProperty(
+                    columns=[glue.CfnTable.ColumnProperty(name="first_name",type="string"),
+                            glue.CfnTable.ColumnProperty(name="last_name",type="string"),
+                            glue.CfnTable.ColumnProperty(name="company_name",type="string"),
+                            glue.CfnTable.ColumnProperty(name="address",type="string"),
+                            glue.CfnTable.ColumnProperty(name="city",type="string"),
+                            glue.CfnTable.ColumnProperty(name="county",type="string"),
+                            glue.CfnTable.ColumnProperty(name="state",type="string"),
+                            glue.CfnTable.ColumnProperty(name="zip",type="string"),
+                            glue.CfnTable.ColumnProperty(name="phone1",type="string"),
+                            glue.CfnTable.ColumnProperty(name="phone2",type="string"),
+                            glue.CfnTable.ColumnProperty(name="email",type="string"),
+                            glue.CfnTable.ColumnProperty(name="web",type="string")] 
+            )
+        ))
 
 
         #Creating Lambda function to grant tag-based lakeformation permissions

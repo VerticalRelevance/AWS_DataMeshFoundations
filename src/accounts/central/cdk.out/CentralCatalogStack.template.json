@@ -1,0 +1,383 @@
+{
+  "Resources": {
+    "producerdatabasea": {
+      "Type": "AWS::Glue::Database",
+      "Properties": {
+        "CatalogId": "480025846069",
+        "DatabaseInput": {
+          "Name": "producer-database-a"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "CentralCatalogStack/producer-database-a"
+      }
+    },
+    "uscustomersa": {
+      "Type": "AWS::Glue::Table",
+      "Properties": {
+        "CatalogId": "480025846069",
+        "DatabaseName": "producer-database-a",
+        "TableInput": {
+          "Description": "description",
+          "Name": "us_customers-a",
+          "StorageDescriptor": {
+            "Columns": [
+              {
+                "Name": "first_name",
+                "Type": "string"
+              },
+              {
+                "Name": "last_name",
+                "Type": "string"
+              },
+              {
+                "Name": "company_name",
+                "Type": "string"
+              },
+              {
+                "Name": "address",
+                "Type": "string"
+              },
+              {
+                "Name": "city",
+                "Type": "string"
+              },
+              {
+                "Name": "county",
+                "Type": "string"
+              },
+              {
+                "Name": "state",
+                "Type": "string"
+              },
+              {
+                "Name": "zip",
+                "Type": "string"
+              },
+              {
+                "Name": "phone1",
+                "Type": "string"
+              },
+              {
+                "Name": "phone2",
+                "Type": "string"
+              },
+              {
+                "Name": "email",
+                "Type": "string"
+              },
+              {
+                "Name": "web",
+                "Type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "CentralCatalogStack/us_customers-a"
+      }
+    },
+    "lakeformationgranttagbasedServiceRole24F25D55": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+              ]
+            ]
+          },
+          "arn:aws:iam::aws:policy/AWSLakeFormationDataAdmin"
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "CentralCatalogStack/lakeformation-grant-tag-based/ServiceRole/Resource"
+      }
+    },
+    "lakeformationgranttagbasedD5AFB064": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+          },
+          "S3Key": "eb91f866ba4298c6b3cd4c336e92c342852c9b8cdb5e0c43bb96c02ac7730999.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "lakeformationgranttagbasedServiceRole24F25D55",
+            "Arn"
+          ]
+        },
+        "Handler": "tag-based-grant.lambda_handler",
+        "Runtime": "python3.8"
+      },
+      "DependsOn": [
+        "lakeformationgranttagbasedServiceRole24F25D55"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "CentralCatalogStack/lakeformation-grant-tag-based/Resource",
+        "aws:asset:path": "asset.eb91f866ba4298c6b3cd4c336e92c342852c9b8cdb5e0c43bb96c02ac7730999",
+        "aws:asset:is-bundled": false,
+        "aws:asset:property": "Code"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/02NzQ6CMBCEn4V7WX+46FEwng16J9tScaW0CdvGmIZ3t0BMPM23M5mdPeyOsM3wzblq+9yQhHjzqHqRrCZ2JmiI1cOe0aNE1iLxHaXRkzA4yBYhXoJVnpydox9PgnCAWDuzNGadBBcNMmvPcJol3VAG1WtfpseTWMy03ZHtRK3ZhVGt7T+unG1pXbh+/NPZTQEH2GUvJsrHYD0NGupVv0zSBLHcAAAA"
+      },
+      "Metadata": {
+        "aws:cdk:path": "CentralCatalogStack/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}
