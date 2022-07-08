@@ -3,6 +3,7 @@ from aws_cdk import (
     Duration,
     Stack,
     aws_glue as glue,
+    aws_glue_alpha as glue_alpha,
     aws_iam as iam,
     aws_lambda as lambda_
 )
@@ -15,29 +16,29 @@ class CentralCatalogStack(Stack):
 
 
         #Create databse
-        database = glue.Database(self, id='my_database_id',
+        database = glue_alpha.Database(self, id='my_database_id',
                                 database_name='producer-a-db'
         )
 
         #Creating Schema
-        schema = glue.Table(self, "MyTable",
+        schema = glue_alpha.Table(self, "MyTable",
                             database= database,
                             table_name="us_customers-a",
-                            columns=[glue.Column(name="first_name",type=glue.Schema.STRING),
-                                     glue.Column(name="last_name",type=glue.Schema.STRING),
-                                     glue.Column(name="company_name",type=glue.Schema.STRING),
-                                     glue.Column(name="address",type=glue.Schema.STRING),
-                                     glue.Column(name="city",type=glue.Schema.STRING),
-                                     glue.Column(name="county",type=glue.Schema.STRING),
-                                     glue.Column(name="state",type=glue.Schema.STRING),
-                                     glue.Column(name="zip",type=glue.Schema.STRING),
-                                     glue.Column(name="phone1",type=glue.Schema.STRING),
-                                     glue.Column(name="phone2",type=glue.Schema.STRING),
-                                     glue.Column(name="email",type=glue.Schema.STRING),
-                                     glue.Column(name="web",type=glue.Schema.STRING)],
-                            partition_keys=[glue.Column(name="year", type=glue.Schema.SMALL_INT), 
-                                            glue.Column(name="month",type=glue.Schema.SMALL_INT)],
-                            data_format=glue.DataFormat.JSON
+                            columns=[glue_alpha.Column(name="first_name",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="last_name",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="company_name",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="address",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="city",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="county",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="state",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="zip",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="phone1",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="phone2",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="email",type=glue_alpha.Schema.STRING),
+                                     glue_alpha.Column(name="web",type=glue_alpha.Schema.STRING)],
+                            partition_keys=[glue_alpha.Column(name="year", type=glue_alpha.Schema.SMALL_INT), 
+                                            glue_alpha.Column(name="month",type=glue_alpha.Schema.SMALL_INT)],
+                            data_format=glue_alpha.DataFormat.JSON
                         )
 
 
