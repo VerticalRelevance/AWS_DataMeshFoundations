@@ -1,6 +1,7 @@
 from constructs import Construct
 from aws_cdk import (
     Duration,
+    RemovalPolicy,
     Stack,
     aws_glue as glue,
     aws_s3 as s3,
@@ -25,8 +26,7 @@ class ProducerAccountStack(Stack):
 
         #ADDING BUCKET POLICY TO REFINED BUCKET - ALLOW ACCESS TO CENTRAL CATALOG ACCOUNT
         refined_bucket.add_to_resource_policy(permission = iam.PolicyStatement(actions = ["s3:*"],
-                                                                               principals = [iam.ArnPrincipal(arn = "arn:aws:iam::480025846069:root"),
-                                                                               iam.ArnPrincipal(arn = "arn:aws:iam::480025846069:role/producer-bucket-crawler-role")],
+                                                                               principals = [iam.ArnPrincipal(arn = "arn:aws:iam::480025846069:root")],
                                                                                resources = ["arn:aws:s3:::data-mesh-refined/*",
                                                                                             "arn:aws:s3:::data-mesh-refined"]))
 
@@ -44,8 +44,9 @@ class ProducerAccountStack(Stack):
     #FUNCTION TO CREATE S3 BUCKET
     def create_s3_bucket(self, bucket_name: str):
 
-        bucket = s3.Bucket(self, bucket_name,
-                           bucket_name = bucket_name.lower(), #making bucket name lowercase
+        bucket = s3.Bucket(self, bucket_name, bucket_name = bucket_name.lower(), 
+                            removal_policy= RemovalPolicy.DESTROY,
+                            auto_delete_objects= True,
                            block_public_access = s3.BlockPublicAccess(block_public_acls = True,  #blocking all public access
                                                                       block_public_policy = True, 
                                                                       ignore_public_acls  = True, 

@@ -12,13 +12,17 @@
     },
     "Tags": [
      {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     },
+     {
       "Key": "aws-cdk:cr-owned:909b2905",
       "Value": "true"
      }
     ]
    },
-   "UpdateReplacePolicy": "Retain",
-   "DeletionPolicy": "Retain",
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
    "Metadata": {
     "aws:cdk:path": "ProducerAccountStack/data-mesh-refined/Resource"
    }
@@ -32,13 +36,48 @@
     "PolicyDocument": {
      "Statement": [
       {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "datameshrefined8B1C4B7A",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "datameshrefined8B1C4B7A",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
        "Action": "s3:*",
        "Effect": "Allow",
        "Principal": {
-        "AWS": [
-         "arn:aws:iam::480025846069:role/producer-bucket-crawler-role",
-         "arn:aws:iam::480025846069:root"
-        ]
+        "AWS": "arn:aws:iam::480025846069:root"
        },
        "Resource": [
         "arn:aws:s3:::data-mesh-refined",
@@ -51,6 +90,94 @@
    },
    "Metadata": {
     "aws:cdk:path": "ProducerAccountStack/data-mesh-refined/Policy/Resource"
+   }
+  },
+  "datameshrefinedAutoDeleteObjectsCustomResource9CC93FCC": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "datameshrefined8B1C4B7A"
+    }
+   },
+   "DependsOn": [
+    "datameshrefinedPolicy3907CB36"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "ProducerAccountStack/data-mesh-refined/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "ProducerAccountStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": {
+      "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+     },
+     "S3Key": "ac9d3642b3e0626d3a6d8c4f5f56507a478c329febdf1dcfbbf7c7db9812cd30.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "__entrypoint__.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs14.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "datameshrefined8B1C4B7A"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "ProducerAccountStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.ac9d3642b3e0626d3a6d8c4f5f56507a478c329febdf1dcfbbf7c7db9812cd30",
+    "aws:asset:property": "Code"
    }
   },
   "ObjectDeploymentAwsCliLayer174B7820": {
@@ -331,7 +458,7 @@
   "CDKMetadata": {
    "Type": "AWS::CDK::Metadata",
    "Properties": {
-    "Analytics": "v2:deflate64:H4sIAAAAAAAA/02QzW7CMBCEn4W7swXyBBDEqQcUpF4j42xhG/+grC0UWXn3OjEBTjP72doZewvlBtYr+eBCtV2h6QLx7KXqREJN5BLiPqgOvah+7dNlOTlNanjj55yHvWQcBZdNbPGu3WDQeshHhxcQkhk9w26SUWhpLq2EmDZ+ywH7H+yZnBVnsleN3tljsMpP5GXS1cWPgqSBWDuNE571XTG7cQlp9BTQpCcqTbB7cKVpzhRzl/QB1xQqqsDemRrZhV7ltYv/hJWzLeUOp8HfnP0qYbOG7eqPiYo+WE8Goc76D6QW/uVxAQAA"
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WQzW6DMBCEnyV3s03CEyRUPfWAiNQrcsw23eKfymsaIYt3r8GUtKeZnV2tPs0RygPsd/LOher6QtMV4iVI1YsUtZFLiOdB9RhE9W5Xl6V2mtT4iNc5D2fJOAku29jhl3ajQRsgr563QEhmDAynWSahpbl2EmL6+CpH9G/omZwVF7I3jcHZl8GqMCebSae/fhIkDcTGaZzjRR+I2U2TqAYOzjTIbvAqX27+36r27ps69GKhS5XcEsbK2OqZr00NKU1wunOlaUEWfx9XznaU0eoxfDj7VMJhD8fdJxMVfrCBDEKT9QdUid++iAEAAA=="
    },
    "Metadata": {
     "aws:cdk:path": "ProducerAccountStack/CDKMetadata/Default"
