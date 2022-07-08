@@ -1,0 +1,100 @@
+{
+  "version": "20.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "CentralCatalogStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CentralCatalogStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CentralCatalogStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "CentralCatalogStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/cbdbf71e405ad1a3214eb9e246931af3fb420bda34abc63463c46ff77e8d7db3.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CentralCatalogStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CentralCatalogStack.assets"
+      ],
+      "metadata": {
+        "/CentralCatalogStack/my_database_id/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "mydatabaseid5537A4A1"
+          }
+        ],
+        "/CentralCatalogStack/MyTable/Bucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyTableBucketD51E7EDC"
+          }
+        ],
+        "/CentralCatalogStack/MyTable/Table": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MyTable85A92380"
+          }
+        ],
+        "/CentralCatalogStack/lakeformation-grant-tag-based/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "lakeformationgranttagbasedServiceRole24F25D55"
+          }
+        ],
+        "/CentralCatalogStack/lakeformation-grant-tag-based/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "lakeformationgranttagbasedD5AFB064"
+          }
+        ],
+        "/CentralCatalogStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CentralCatalogStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/CentralCatalogStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CentralCatalogStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CentralCatalogStack"
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "version": "20.0.0",
+  "artifacts": {
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    },
+    "DataMeshConsumerStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "DataMeshConsumerStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "DataMeshConsumerStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "DataMeshConsumerStack.template.json",
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/a04add88138387ae3a78c62c4f46e134f8abf12121fa744fc8857c38e212dab1.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "DataMeshConsumerStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "DataMeshConsumerStack.assets"
+      ],
+      "metadata": {
+        "/DataMeshConsumerStack/consumer": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "consumer"
+          }
+        ],
+        "/DataMeshConsumerStack/lf-resource-link/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "lfresourcelinkServiceRoleA72D55F2"
+          }
+        ],
+        "/DataMeshConsumerStack/lf-resource-link/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "lfresourcelink4595C91A"
+          }
+        ],
+        "/DataMeshConsumerStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/DataMeshConsumerStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/DataMeshConsumerStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/DataMeshConsumerStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "DataMeshConsumerStack"
+    }
+  }
+}
