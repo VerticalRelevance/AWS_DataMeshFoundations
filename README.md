@@ -2,7 +2,7 @@
 Data mesh reference architectures for AWS.
 
 
-## Steps to Create Data Mesh
+## Manual Steps to Create Data Mesh
 
 * Create the producer, consumer, and central catalog account 
 
@@ -55,3 +55,37 @@ __Producer and Consumer Account:__
 
 * Create an S3 bucket to store Athena queries. 
 
+
+
+## Using this Project
+
+### Folder Structure
+The following outlines the folder structure of the project:
+- src
+    - accounts
+        - central
+        - consumer
+        - producer
+    - ops
+
+### Developing with CDK Alpha Modules
+CDK2 changes how alpha modules are used in project. For this project, the following additional modules must be installed with PIP in order for the CDK deployment to work properly:
+`pip install aws-cdk.aws-glue-alpha`
+
+Once this command is run, you should be able to run the deployments properly within this project. Additionally, note that the there is a distinct import command for working with these alpha modules:
+```python
+from aws_cdk import (
+    Duration,
+    Stack,
+    aws_glue as glue,
+    aws_glue_alpha as glue_alpha,
+    aws_iam as iam,
+    aws_lambda as lambda_
+)
+```
+In the above imports, `aws_glue_alpha` is imported as `glue_alpha` and serves as a separate and distinct modules within the Python execution context. So, in the code, you use that particular module for your 'alpha' components. For example:
+```python
+database = glue_alpha.Database(self, id='my_database_id',
+                        database_name='producer-a-db'
+)
+```
