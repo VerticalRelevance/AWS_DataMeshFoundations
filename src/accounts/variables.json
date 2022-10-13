@@ -1,0 +1,12 @@
+
+{
+    "producer_bucket_name" : "data-mesh-refined",
+    "central_database_name" : "joe_central_catalog_db",
+    "consumer_database_name" : "joe_consumer_catalog_db",
+    "consumer_athena_wg_name" : "joe_consumer_workgroup",
+    "central_table_prefix" : "joe_test",
+    "central_crawler_name" : "producer_crawler",
+    "central_tag_key" : "joe_test",
+    "central_tag_values" : ["test_demo_tag"],
+    "consumer_analyst_arn": "arn:aws:sts::204319279320:assumed-role/AWSReservedSSO_AdministratorAccess_65fa7165386fc217/jsadaka"
+}

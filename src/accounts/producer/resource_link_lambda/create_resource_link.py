@@ -5,12 +5,12 @@ client = boto3.client('glue')
 
 def lambda_handler(event, context):
     response = client.create_table(
-        DatabaseName='',
+        DatabaseName='joe_test_db',
         TableInput={
-            'Name': '',
+            'Name': 'joe_testcustomers',
             'TargetTable': {
                 'CatalogId': '480025846069',
-                'DatabaseName': 'producer-data',
+                'DatabaseName': 'joe_central_catalog_db',
                 'Name': 'data_mesh_refined'
             }
         },
