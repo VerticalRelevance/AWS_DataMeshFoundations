@@ -1,6 +1,6 @@
 
 {
-    "producer_bucket_name" : "data-mesh-refined",
+    "producer_bucket_name" : "data-mesh-extra-refined",
     "central_database_name" : "joe_central_catalog_db",
     "consumer_database_name" : "joe_consumer_catalog_db",
     "consumer_athena_wg_name" : "joe_consumer_workgroup",
@@ -8,5 +8,5 @@
     "central_crawler_name" : "producer_crawler",
     "central_tag_key" : "joe_test",
     "central_tag_values" : ["test_demo_tag"],
-    "consumer_analyst_arn": "arn:aws:sts::204319279320:assumed-role/AWSReservedSSO_AdministratorAccess_65fa7165386fc217/jsadaka"
+    "consumer_sso_arn" : "arn:aws:iam::901228589034:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_a045a31cc2cdc3a5"
 }

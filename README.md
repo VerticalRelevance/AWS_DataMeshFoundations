@@ -90,62 +90,19 @@ database = glue_alpha.Database(self, id='my_database_id',
 )
 ```
 
-##Standalone Manual Steps
+## Running The BluePrint
+1. Download aws keys for 3 separate accounts into named AWS profiles on your local machine "producer", "central", and "consumer"
+2. Create a python virtual environment, and install the dependencies in src/ops/requirements.txt, and activate this env
+3. in the code structure go to the src/ops and run "deploy-all.sh"
+4. login to the console and setup the SSO user that you downloaded credentials for to the "Data lake admin" list in the lakeformation section.
+5. Add the SSO user that you downloaded credentials fore to the "Database Creators" list in lakeoformation section of the console. 
+6. Also do some first time setup for lakeformation to remove the "IAM-only" credential settings so that TBAC works properly. These changes should be prompted/alerted by the console when you enter the lakeformation UI
+7. perform steps 4 - 6 on both the central and consumer accounts
+8. run the post-setup python "python src/ops/post_setup.py"
 
-Cross account setup:  
+## Known issues with current blueprint setup
+1. After all setup shown here is done, there are still some permission issues with the SSO user being unable to query the linked table in the consumer account. 
 
-The Central catalog account needs access to the Lake house data store of the producer accounts. Cross-account set up is required from the Central catalog account to the producer account. The following steps need to be taken to provide cross-account access: 
-
-IAM policies and resource-based bucket policies 
-
-Create an IAM role in Central catalog account 
-
-Provide IAM role in central catalog account a permission to access lake house objects 
-
-Configure a bucket policy in S3 in the producer account to grant access to the role created in the central catalog account 
-
- 
-
-After completion of the cross-account setup, the central catalog account can access the s3 objects in the data lake owned by the producer account. 
-
- 
-
-Central Catalog Configuration: 
-
-Register Data Lake locations: Register the Lake house locations of the producer accounts in the central catalog account. As there is cross account access between the producer account and central catalog account, the Lake house location will be accessible from central catalog account. It is recommended to register the bucket so all objects in the bucket and its sub-directories are accessible. 
-
- 
-
-Create a Data Catalog: Create a data catalog database in the central catalog account. Create table catalogs in the catalog database. The table catalog can be created manually or using the Crawler 
-
- 
-
-Creating data catalog using Crawler: 
-
-Add a policy in AWS Glue Catalog settings to access Lake house locations in the producer accounts. Set “EvaluatedByLakeFormationTags” property to true in the policy condition. It will enable LF tag-based access control 
-
-Create a Glue Crawler to source data stores pointing to the lake house locations in the producer accounts and have the output pointing to the catalog database 
-
-Manually creating data catalog: 
-
-Create a generic lambda function to create a table catalog in the catalog database. Table metadata information is passed to the lambda function using a JSON file. 
-
- 
-
-Create and assign LF Tags: Based on the requirements, create Lake Formation tags in the central catalog account. LF tags are key-value pair property and multiple values can be assigned to key. Once the LF tags are created, assign these tags to catalog tables or columns. These LF tags will used to control access to catalog objects. 
-
- 
-
-Grant Permissions to Consumers: Grant Data Lake permissions to External Account (Consumer accounts) based on LF tags. Database and Table level permissions can be granted to consumer accounts. It is recommended to provide only table level permissions to consumer accounts. With these permissions, the central catalog database will be visible to the consumer account Lake formation admin. 
-
- 
-
-Consumer Account Configuration: 
-
-Create a Resource Link: Once permissions are granted to consumer accounts from the central catalog account, the central catalog database objects will be visible to the admin of the consumer account. The Consumer Account admin has to create a resource link which will create a local catalog database in consumer account. 
-
- 
-
-Grant permission to consumer account users: The consumer account admin grants access to their users based on LF tags. The consumer account can inherit LF tags from central catalog account in addition to creating their own LF Tags. 
-
- 
+## Next Steps for blueprint development
+1. All of the things that are done in the post_setup.py should be moved to CDK if possible
+2. Setup for consumer & Producer account should be refactored to work as a service catalog product. This service catalog product should be maintained in the central account, then shared with the consumer & producer accounts. Adding new data sources to a producer or consumer could potentially be added as service actions to these products as well.
